@@ -18,19 +18,21 @@ public class EmployeeService {
 
     private final Map<String, Employee> employees = new HashMap<>();
 
-    private String getKey(Employee employee) {
-        return employee.getName() + "|" + employee.getSurname();
+    private String getKey(String name, String surname) {
+
+        return name + "|" + surname;
     }
 
 
-    public Employee add(String name, String surname) {
-        Employee employee = new Employee(name, surname);
-        if (employees.containsKey(getKey(employee))) {
+    public Employee add(String name, String surname, int department, double salary) {
+        Employee employee = new Employee(name, surname, department, salary);
+        String key = getKey(name, surname);
+        if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
 
         if (employees.size()<LIMIT) {
-            employees.put(getKey(employee), employee);
+            employees.put(key, employee);
             return employee;
         }
         throw new EmployeeStorageIsFullException();
@@ -39,28 +41,28 @@ public class EmployeeService {
 
 
     public Employee remove(String name, String surname) {
-        Employee employee = new Employee(name, surname);
-        if (!employees.containsKey(getKey(employee))) {
+        String key = getKey(name, surname);
+        if (!employees.containsKey(key)) {
             throw new EmployeeNotFoundException();
         }
 
-        return employees.remove(getKey(employee));
+        return employees.remove(key);
     }
 
 
     public Employee find(String name, String surname) {
-        Employee employee = new Employee(name, surname);
-        if (!employees.containsKey(getKey(employee))) {
+        String key = getKey(name, surname);
+        if (!employees.containsKey(key)) {
             throw new EmployeeNotFoundException();
         }
-                return employee;
+                return employees.get(key);
             }
 
 
 
-//    public List<Employee> getAll() {
-//       return new ArrayList<>(employees);
-//    }
+    public List<Employee> getAll() {
+      return new ArrayList<>(employees.values());
+   }
 
 
 }
